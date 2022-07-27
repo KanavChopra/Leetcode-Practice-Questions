@@ -10,22 +10,23 @@
  * };
  */
 
-// Using Morris Traversal
+//Using Recursion
 class Solution {
 public:
     void flatten(TreeNode* root) {
-        TreeNode* curr = root;
-        while (curr) {
-            if (curr -> left) {
-                TreeNode* predecessor = curr -> left;
-                while (predecessor -> right && predecessor -> right != curr) {
-                    predecessor = predecessor -> right;
-                }
-                predecessor -> right = curr -> right;
-                curr -> right = curr -> left;
-                curr -> left = NULL;
+        if (!root) {
+            return;
+        }
+        flatten(root -> left);
+        flatten(root -> right);
+        if (root -> left) {
+            TreeNode* next = root -> right;
+            root -> right = root -> left;
+            root -> left = NULL;
+            while (root -> right) {
+                root = root -> right;
             }
-            curr = curr -> right;
+            root -> right = next;
         }
     }
 };
