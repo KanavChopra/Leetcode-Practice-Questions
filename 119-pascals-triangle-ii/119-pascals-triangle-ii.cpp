@@ -1,17 +1,17 @@
+// N-th row of pascal triangle is Nc0, Nc1, Nc2, ....., Ncn;
+// Now Ncr = Ncr - 1 * (N - r + 1) / r
+
 class Solution {
 public:
-    vector<int> getRow(int rowIndex) {
-        vector<int> currRow;
-        currRow.push_back(1);
-        if (rowIndex == 0) {
-            return currRow;
+    vector<int> getRow(int N) {
+        vector<int> row;
+        int prev = 1;
+        row.push_back(prev);
+        for (int i = 1; i <= N; ++i) {
+            int curr = ((long) prev * (long)(N - i + 1)) / i;
+            row.push_back(curr);
+            prev = curr;
         }
-        vector<int> prevRow = getRow(rowIndex - 1);
-        for (int i = 1; i < prevRow.size(); ++i) {
-            int val = prevRow[i - 1] + prevRow[i];
-            currRow.push_back(val);
-        }
-        currRow.push_back(1);
-        return currRow;
+        return row;
     }
 };
