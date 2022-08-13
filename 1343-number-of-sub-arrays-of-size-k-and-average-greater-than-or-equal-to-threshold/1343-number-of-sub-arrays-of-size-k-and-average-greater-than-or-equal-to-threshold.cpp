@@ -1,18 +1,13 @@
 class Solution {
 public:
     int numOfSubarrays(vector<int>& arr, int k, int threshold) {
-        int n = arr.size();
+        threshold *= k;
         int cnt = 0;
         int sum = accumulate(arr.begin(), arr.begin() + k, 0);
-        if (sum / k >= threshold) {
-            cnt++;
-        }
-        for (int i = k; i < n; ++i) {
-            sum -= arr[i - k];
-            sum += arr[i];
-            if (sum / k >= threshold) {
-                cnt++;
-            }
+        cnt += (sum >= threshold);
+        for (int i = k; i < arr.size(); ++i) {
+            sum += arr[i] - arr[i - k];
+            cnt += (sum >= threshold);
         }
         return cnt;
     }
