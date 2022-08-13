@@ -18,17 +18,14 @@ public:
             // frequency.
             for (int j = i; j < i + subStringSize; j += wordLength) {
                 string str = s.substr(j, wordLength);
-                 // Now, check if the frequency of each string
-                // in map mp is the same as the frequency in
-                // map tmp. This ensure that the current
-                // window is of the same concatenation of
-                // the strings in the array words[]
+                // check if this string exist in the mp or not
                 if (mp.count(str)) {
                     tmp[str]++;
                 } else {
                     break;
                 }
             }
+            // each string has same freq
             if (tmp == mp) {
                 ans.push_back(i);
             }
