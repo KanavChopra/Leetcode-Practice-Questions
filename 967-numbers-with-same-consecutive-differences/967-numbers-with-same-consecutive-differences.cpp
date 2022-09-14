@@ -1,26 +1,27 @@
 class Solution {
 public:
-    void dfs(int num, int n, int k, vector<int> &res) {
-        if (n == 0) {
-            res.push_back(num);
-        } else {
-            int digit = num % 10;
-            if (digit + k <= 9) {
-                dfs(num * 10 + digit + k, n - 1, k, res);
-            }
-            if (k != 0 && digit >= k) {
-                dfs(num * 10 + digit - k, n - 1, k, res);
-            }
-        }
-    }
     vector<int> numsSameConsecDiff(int n, int k) {
         if (n == 1) {
-            return {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+            return {1, 2, 3, 4, 5, 6, 7, 8, 9};
         }
-        vector<int> res;
-        for (int num = 1; num <= 9; ++num) {
-            dfs(num, n - 1, k, res);
+        deque<int> dq{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        // do the following logic n - 1 times
+        // out of n numbers we have filled 1 no
+        // in the deque initially so we need to 
+        // just fill remainig n - 1 digits
+        while (--n) {
+            int size = dq.size();
+            for (int i = 0; i < size; ++i) {
+                auto front = dq.front();
+                dq.pop_front();
+                // we can potentially add 0 to 9 to the curr number
+                for (int j = 0; j < 10; ++j) {
+                    if (abs(front % 10 - j) == k) {
+                        dq.push_back(front * 10 + j);
+                    }
+                }
+            }
         }
-        return res;
+        return vector<int>{dq.begin(), dq.end()};
     }
 };
