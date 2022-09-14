@@ -11,14 +11,39 @@
  */
 class Solution {
 public:
-    int goodNodes(TreeNode* root, int val = INT_MIN) {
-    return root == nullptr ? 0 : (val <= root->val) 
-            + goodNodes(root -> left, max(root -> val, val))
-                + goodNodes(root -> right, max(root -> val, val));
+    // int goodNodes(TreeNode* root, int mx = INT_MIN) {
+    //     // DFS
+    //     if (!root) {
+    //         return 0;
+    //     }
+    //     int cnt = 0;
+    //     if (root -> val >= mx) {
+    //         ++cnt;
+    //         mx = max(mx, root -> val);
+    //     }
+    //     cnt += goodNodes(root -> left, mx);
+    //     cnt += goodNodes(root -> right, mx);
+    //     return cnt;
+    // }
+    
+    int goodNodes(TreeNode* root) {
+        if (!root) {
+            return 0;
+        }
+        int res = 0;
+        queue<pair<TreeNode*, int>> q;
+        q.push({root, INT_MIN});
+        while (!q.empty()) {
+            auto [node, mx] = q.front();
+            q.pop();
+            res += (node -> val >= mx);
+            if (node -> left) {
+                q.push({node -> left, max(mx, node -> val)});
+            }
+            if (node -> right) {
+                q.push({node -> right, max(mx, node -> val)});
+            }
+        }
+        return res;
     }
 };
-
-
-// https://leetcode.com/problems/count-good-nodes-in-binary-tree/discuss/1408637/C%2B%2B-or-Preorder-or-Logic-Explained-Clearly-or-TC%3A-O(N)-or-SC%3A-O(N)
-
-// https://leetcode.com/problems/count-good-nodes-in-binary-tree/discuss/2512547/C%2B%2B-or-Python-or-C97-DFSDetailed-graph-explantion-or-Beginner-friendly-or-Easy-to-understand-_
