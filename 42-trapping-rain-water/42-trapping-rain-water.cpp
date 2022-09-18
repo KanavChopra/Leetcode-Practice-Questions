@@ -6,23 +6,26 @@ public:
         }
         
         int n = height.size();
+        stack<int> st;
         int waterTrapped = 0;
         
-        vector<int> left(n);
-        vector<int> right(n);
-        
-        left[0] = height[0];
-        for (int i = 1; i < n; ++i) {
-            left[i] = max(left[i - 1], height[i]);
-        }
-        right[n - 1] = height[n - 1];
-        for (int i = n - 2; i >= 0; --i) {
-            right[i] = max(right[i + 1], height[i]);
-        }
-        
-        // ignore the first and last bar
-        for (int i = 1; i < n - 1; ++i) {
-            waterTrapped += min(left[i], right[i]) - height[i];
+        for (int curr = 0; curr < n; ++curr) {
+            // remove bars from the stack until
+            // st.top is smaller than curr which 
+            // means curr is right max for st.top
+            while (!st.empty() && height[st.top()] < height[curr]) {
+                int bar = st.top();
+                st.pop();
+                if (st.empty()) {
+                    break;
+                }
+                int width = curr - st.top() - 1;
+                waterTrapped += (width * (min(height[curr], height[st.top()]) - height[bar]));
+            }
+            // if the stack is either empty or
+            // height of the current bar is less than
+            // or equal to the top bar of stack
+            st.push(curr);
         }
         return waterTrapped;
     }
