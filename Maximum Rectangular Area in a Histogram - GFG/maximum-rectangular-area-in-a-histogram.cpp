@@ -9,29 +9,17 @@ class Solution {
     public:
     //Function to find largest rectangular area possible in a given histogram.
     long long getMaxArea(long long height[], int n) {
-        vector<long long> lessFromLeft(n); // each i contains index of the first bar in the left that is smaller than the current bar
-        vector<long long> lessFromRight(n); // each i contains index of the first bar in the right that is smaller than the current bar
-        
-        lessFromLeft[0] = -1;
-        lessFromRight[n - 1] = n;
-        
-        for (int i = 0; i < n; ++i) {
-            int p = i - 1;
-            while (p >= 0 && height[p] >= height[i]) {
-                p = lessFromLeft[p];
-            }
-            lessFromLeft[i] = p;
-        }
-        for (int i = n - 2; i >= 0; --i) {
-            int p = i + 1;
-            while (p < n && height[p] >= height[i]) {
-                p = lessFromRight[p];
-            }
-            lessFromRight[i] = p;
-        }
+        stack<long long> stk;
         long long maxArea = LONG_MIN;
-        for (int i = 0; i < n; ++i) {
-            maxArea = max(maxArea, height[i] * (lessFromRight[i] - lessFromLeft[i] - 1));
+        for (int i = 0; i <= n; ++i) {
+            long long currHeight = i == n ? 0 : height[i];
+            while (!stk.empty() && currHeight < height[stk.top()]) {
+                long long top = stk.top();
+                stk.pop();
+                long long width = stk.empty() ? i : i - stk.top() - 1;
+                maxArea = max(maxArea, height[top] * width);
+            }
+            stk.push(i);
         }
         return maxArea;
     }
