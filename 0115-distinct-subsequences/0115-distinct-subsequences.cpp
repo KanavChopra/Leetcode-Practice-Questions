@@ -1,28 +1,25 @@
+// Approach:
+// dp[i][j] means number of distinct subsequences of t[0...i - 1] in s[0...j - 1];
+// Then we have the following cases:
+// 1. dp[i][j] = dp[i][j - 1] if t[i - 1] != s[j - 1];
+// 2. dp[i][j] = dp[i][j - 1] + dp[i - 1][j - 1] if t[i - 1] == s[j - 1];
+// 3. Boundry case 1: dp[i][0] = 0 for all positive i, because non-empty string will have no susequence in any string.
+// 4. Boundry case 2: dp[0][j] = 1, because an empty string will have exactly one subsequence in any string
+
 class Solution {
-private:
-    int solve(string &s, string &t, int i, int j, vector<vector<int>> &dp) {
-        // If we have matched all the character of the required string
-        if (j < 0) {
-            return 1;
-        }
-        // If we have exhausted the first string and there is still matching
-        // to be done on string second
-        if (i < 0) {
-            return 0;
-        }
-        if (dp[i][j] != -1) {
-            return dp[i][j];
-        }
-        if (s[i] == t[j]) {
-            return dp[i][j] = solve(s, t, i - 1, j, dp) + solve(s, t, i - 1, j - 1, dp);
-        }
-        return dp[i][j] = solve(s, t, i - 1, j, dp);
-    }
 public:
     int numDistinct(string s, string t) {
-        int n = s.size();
-        int m = t.size();
-        vector<vector<int>> dp(n, vector<int>(m, -1));
-        return solve(s, t, n - 1, m - 1, dp);
+        int n = s.length();
+        int m = t.length();
+        vector<vector<double>> dp(m + 1, vector<double>(n + 1, 0));
+        for (int j = 0; j < n; ++j) {
+            dp[0][j] = 1;
+        }
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                dp[i][j] = dp[i][j - 1] + (t[i - 1] == s[j - 1] ? dp[i - 1][j - 1] : 0);
+            }
+        }
+        return (int) dp[m][n];
     }
 };
