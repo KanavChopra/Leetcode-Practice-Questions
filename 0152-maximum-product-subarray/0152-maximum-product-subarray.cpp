@@ -1,14 +1,16 @@
 class Solution {
 public:
     int maxProduct(vector<int>& nums) {
+        int n = nums.size();
+        int leftProduct = 1;
+        int rightProduct = 1;
         int res = nums[0];
-        int maxProduct = 1;
-        int minProduct = 1;
-        for (const auto &num : nums) {
-            int temp = max({num, num * maxProduct, num * minProduct});
-            minProduct = min({num, num * maxProduct, num * minProduct});
-            maxProduct = temp;
-            res = max(res, maxProduct);
+        for (int i = 0; i < n; ++i) {
+            leftProduct = (leftProduct ? leftProduct : 1);
+            rightProduct = (rightProduct ? rightProduct : 1);
+            leftProduct *= nums[i];
+            rightProduct *= nums[n - i - 1];
+            res = max({res, leftProduct, rightProduct});
         }
         return res;
     }
