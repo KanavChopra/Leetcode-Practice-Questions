@@ -12,6 +12,10 @@ class Solution {
         if (s[start] == s[end]) {
             return dp[start][end] = 2 + solve(s, start + 1, end - 1, dp);
         } else {
+            // since the characters are not same, so both cannot be the part
+            // of our lps. so we recur on the substring either by removing the
+            // first character or by either removing the last character, and
+            // since we want the longest subsequence we take the max of both.
             return dp[start][end] = max(solve(s, start + 1, end, dp), solve(s, start, end - 1, dp));
         }
     }
