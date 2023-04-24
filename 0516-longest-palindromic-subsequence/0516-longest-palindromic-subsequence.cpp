@@ -1,28 +1,24 @@
 class Solution {
-    int solve(string &s, int start, int end, vector<vector<int>> &dp) {
-        if (start > end) {
-            return 0;
-        }
-        if (start == end) {
-            return 1;
-        }
-        if (dp[start][end] != -1) {
-            return dp[start][end];
-        }
-        if (s[start] == s[end]) {
-            return dp[start][end] = 2 + solve(s, start + 1, end - 1, dp);
-        } else {
-            // since the characters are not same, so both cannot be the part
-            // of our lps. so we recur on the substring either by removing the
-            // first character or by either removing the last character, and
-            // since we want the longest subsequence we take the max of both.
-            return dp[start][end] = max(solve(s, start + 1, end, dp), solve(s, start, end - 1, dp));
-        }
-    }
 public:
     int longestPalindromeSubseq(string s) {
+        // dp[i][j] denotes the lenght of the longest lps
+        // between indexes i and j
         int n = s.length();
-        vector<vector<int>> dp(n, vector<int>(n, -1));
-        return solve(s, 0, n - 1, dp);
+        vector<vector<int>> dp(n, vector<int>(n, 0));
+        for (int i = n - 1; i >= 0; --i) {
+            // if there is only one character
+            dp[i][i] = 1;
+            for (int j = i + 1; j < n; ++j) {
+                if (s[i] == s[j]) {
+                    dp[i][j] = 2 + dp[i + 1][j - 1];
+                } else {
+                    dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        // [0...n - 1] contains our answer becuase it denotes to
+        // give the length of lps starting at 0 index and ending
+        // at n - 1 index which is basically the complete string/
+        return dp[0][n - 1];
     }
 };
